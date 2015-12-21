@@ -1,0 +1,6 @@
+c:\users\subrata\documents\visual studio 2012\Projects\DiscountOffers\DiscountOffers\bin\Debug\DiscountOffers.exe.config
+C:\Users\subrata\Documents\Visual Studio 2012\Projects\DiscountOffers\DiscountOffers\bin\Debug\DiscountOffers.exe
+C:\Users\subrata\Documents\Visual Studio 2012\Projects\DiscountOffers\DiscountOffers\bin\Debug\DiscountOffers.pdb
+C:\Users\subrata\Documents\Visual Studio 2012\Projects\DiscountOffers\DiscountOffers\obj\Debug\DiscountOffers.csprojResolveAssemblyReference.cache
+C:\Users\subrata\Documents\Visual Studio 2012\Projects\DiscountOffers\DiscountOffers\obj\Debug\DiscountOffers.exe
+C:\Users\subrata\Documents\Visual Studio 2012\Projects\DiscountOffers\DiscountOffers\obj\Debug\DiscountOffers.pdb
