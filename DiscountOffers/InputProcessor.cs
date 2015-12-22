@@ -23,7 +23,7 @@ namespace DiscountOffers
         /// <returns>Matrix representation of product-customer bipartite graph.</returns>
         public double[,] CreateGraphFromInput()
         {
-            ExtractProductCustomerNames();
+            ExtractProductAndCustomerNames();
             if (customerNames == null || customerNames.Length == 0 || productNames == null || productNames.Length == 0)
             {
                 return null;
@@ -70,27 +70,55 @@ namespace DiscountOffers
 
         private int GetTotalLetters(string input)
         {
-            int space = input.Count(Char.IsWhiteSpace);
-            return input.Length - space;
+            if (input == null)
+                return 0;
+            int total = 0;
+
+            //Please uncomment this section if you want any non-space char as letter.
+            //int space = input.Count(Char.IsWhiteSpace);
+            //total = input.Length - space;
+
+            //Please comment this section if you want any non-space char as letter.
+            total = GetConsonantCount(input) + GetVowelsCount(input);
+            return total;
         }
 
         private int GetVowelsCount(string input)
         {
+            if (input == null)
+                return 0;
+
             const string vowels = "aeiou";
             return input.Count(chr => vowels.Contains(char.ToLower(chr)));
         }
 
         private int GetConsonantCount(string input)
         {
+            if (input == null)
+                return 0;
+
             const string consonants = "bcdfghjklmnpqrstvwxyz";
             return input.Count(chr => consonants.Contains(char.ToLower(chr)));
         }
 
-        private void ExtractProductCustomerNames()
+        private void ExtractProductAndCustomerNames()
         {
+            if (this.inputString == null)
+                throw new Exception("Invalid input string");
+
             var lines = this.inputString.Split(';');
+
+            if (lines.Length != 2)
+            {
+                throw new Exception("Invalid input string:" + this.inputString);
+            }
             this.customerNames = lines[0].Split(',');
             this.productNames = lines[1].Split(',');
+
+            if(customerNames.Length == 0 || productNames.Length == 0)
+            {
+                throw new Exception("Invalid input string (customer or product name cannot be empty) :" + this.inputString);
+            }
         }
     }
 }
