@@ -22,7 +22,7 @@ namespace DiscountOffers
                 {
                     var processedInput = new ProcessedInput(line);
                     var weightedGraph = processedInput.CreateGraphFromInput();
-                    int maxSS = CalculateMaxSSFromMatrix(weightedGraph);
+                    double maxSS = CalculateMaxSSFromMatrix(weightedGraph);
                     Console.WriteLine(maxSS);
                 }
             }
@@ -32,193 +32,18 @@ namespace DiscountOffers
             }
         }
 
-        private static int CalculateMaxSSFromMatrix(double[,] weightedGraph)
+        private static double CalculateMaxSSFromMatrix(double[,] weightedGraph)
         {
-            int result = 0;
+            double result = 0;
             double[,] minimizationMatrix = ConvertIntoMinimizationMatrix(weightedGraph);
-            minimizationMatrix = GetAssignmentMatrix(minimizationMatrix);
-            result = GetMaximumAssignmentValue(minimizationMatrix, weightedGraph);
+            HungarianAlgorithm algo = new HungarianAlgorithm(minimizationMatrix);
+            var res = algo.Run();
+            for(int i = 0;i < weightedGraph.GetLength(0); i++)
+            {
+                result += weightedGraph[i , res[i]];
+            }
             return result;
         }
-
-        private static int GetMaximumAssignmentValue(double[,] minimizationMatrix, double[,] weightedGraph)
-        {
-            return 0;
-        }
-
-        private static double[,] GetAssignmentMatrix(double[,] minimizationMatrix)
-        {
-            //Find minimum number of lines required to cover all the 0s.
-            List<Line> lines = GetMinimumLinesRequiredToCoverAllZero(minimizationMatrix);
-           //If it does not matches with the the rank of matrix, do some extra staff, untill we get the one.
-           while(lines.Count < minimizationMatrix.GetLength(0))
-           {
-                minimizationMatrix = DoSpecialTransformation(minimizationMatrix, lines);
-                lines = GetMinimumLinesRequiredToCoverAllZero(minimizationMatrix);
-            }
-            //Find the row/columns which have exactly one zero and draw line. and remove other zeros from the row/column
-
-            return minimizationMatrix;
-        }
-
-        private static double[,] DoSpecialTransformation(double[,] minimizationMatrix, List<Line> lines)
-        {
-            //Get minimum number which is not covered by lines.
-
-            //Subtract it from the uncovered elements.
-
-            //Add it to the intersection elements.
-            return null;
-        }
-
-        private static Boolean isZero(int[] array)
-        {
-            foreach ( var val in array)
-            {
-                if (val != 0)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        private static List<Line> GetMinimumLinesRequiredToCoverAllZero(double[,] minimizationMatrix)
-        {
-          //  List<Line> linesWithZero = GetAllLinesWithZero(minimizationMatrix);
-          //  List<Line> minimalLine = new List<Line>();
-           // double[,] tempMinimizationMatrix = new double[minimizationMatrix.GetLength(0),minimizationMatrix.GetLength(1)];
-          //  Array.Copy(minimizationMatrix,0, tempMinimizationMatrix,0, minimizationMatrix.Length);
-            
-
-            int SIZE = minimizationMatrix.GetLength(0);
-            int[] zerosPerRow = new int[SIZE];
-            int[] zerosPerCol = new int[SIZE];
-
-            // Count the number of 0's per row and the number of 0's per column        
-            for (int i = 0; i < SIZE; i++)
-            {
-                for (int j = 0; j < SIZE; j++)
-                {
-                    if (minimizationMatrix[i,j] == 0)
-                    {
-                        zerosPerRow[i]++;
-                        zerosPerCol[j]++;
-                    }
-                }
-            }
-
-            // There should be at must SIZE lines, 
-            // initialize the list with an initial capacity of SIZE
-            List<Line> lines = new List<Line>(SIZE);
-
-            LineType lastInsertedLineType = LineType.NONE;
-
-            // While there are 0's to count in either rows or colums...
-            while (!isZero(zerosPerRow) && !isZero(zerosPerCol))
-            {
-                // Search the largest count of 0's in both arrays
-                int max = -1;
-                Line lineWithMostZeros = null;
-                for (int i = 0; i < SIZE; i++)
-                {
-                    // If exists another count of 0's equal to "max" but in this one has
-                    // the same direction as the last added line, then replace it with this
-                    if (zerosPerRow[i] > max || (zerosPerRow[i] == max && lastInsertedLineType == LineType.HORIZONTAL))
-                    {
-                        lineWithMostZeros = new Line(i, LineType.HORIZONTAL);
-                        max = zerosPerRow[i];
-                    }
-                }
-
-                for (int i = 0; i < SIZE; i++)
-                {
-                    // Same as above
-                    if (zerosPerCol[i] > max || (zerosPerCol[i] == max && lastInsertedLineType == LineType.VERTICAL))
-                    {
-                        lineWithMostZeros = new Line(i, LineType.VERTICAL);
-                        max = zerosPerCol[i];
-                    }
-                }
-
-                // Delete the 0 count from the line 
-                if (lineWithMostZeros.isHorizontal())
-                {
-                    zerosPerRow[lineWithMostZeros.getLineIndex()] = 0;
-                }
-                else {
-                    zerosPerCol[lineWithMostZeros.getLineIndex()] = 0;
-                }
-
-
-                int index = lineWithMostZeros.getLineIndex();
-                if (lineWithMostZeros.isHorizontal())
-                {
-                    for (int j = 0; j < SIZE; j++)
-                    {
-                        if (minimizationMatrix[index,j] == 0)
-                        {
-                            zerosPerCol[j]--;
-                        }
-                    }
-                }
-                else {
-                    for (int j = 0; j < SIZE; j++)
-                    {
-                        if (minimizationMatrix[j,index] == 0)
-                        {
-                            zerosPerRow[j]--;
-                        }
-                    }
-                }
-
-                // Add the line to the list of lines
-                lines.Add(lineWithMostZeros);
-                lastInsertedLineType = lineWithMostZeros.getLineType();
-            }
-            return lines;
-        }
-
-        //private static List<Line> GetAllLinesWithZero(double[,] minimizationMatrix)
-        //{
-        //    List<Line> linesWithZero = new List<Line>();
-        //    int zeroCount = 0;
-        //    int rank = minimizationMatrix.GetLength(0);
-        //    for (int i = 0; i < rank; i++)
-        //    {
-        //        zeroCount = 0;
-        //        for (int j = 0; j < rank; j++)
-        //        {
-        //            if (minimizationMatrix[i,j] == 0)
-        //            {
-        //                zeroCount++;
-        //            }
-        //        }
-        //        if (zeroCount > 0)
-        //        {
-        //            linesWithZero.Add(new Line(new int[] { i, 0 }, new int[] { i, rank-1 }, zeroCount));
-        //        }
-        //    }
-
-        //    for (int i = 0; i < rank; i++)
-        //    {
-        //        zeroCount = 0;
-        //        for (int j = 0; j < rank; j++)
-        //        {
-        //            if (minimizationMatrix[j,i] == 0)
-        //            {
-        //                zeroCount++;
-        //            }
-        //        }
-        //        if (zeroCount > 0)
-        //        {
-        //            linesWithZero.Add(new Line(new int[] { 0, i }, new int[] { rank-1, i }, zeroCount));
-        //        }
-        //    }
-
-        //    List<Line> sorteList = linesWithZero.OrderByDescending(o => o.zeroCount).ToList();
-        //    return sorteList;
-        //}
 
         private static double[,] ConvertIntoMinimizationMatrix(double[,] weightedGraph)
         {
@@ -278,32 +103,7 @@ namespace DiscountOffers
 
             return minimizationMatrix;
         }
-        enum LineType { NONE, HORIZONTAL, VERTICAL }
-
-        class Line
-        {
-            int lineIndex;
-            LineType rowType;
-            public Line(int lineIndex, LineType rowType)
-            {
-                this.lineIndex = lineIndex;
-                this.rowType = rowType;
-            }
-            public LineType getLineType()
-            {
-                return rowType;
-            }
-
-            public int getLineIndex()
-            {
-                return lineIndex;
-            }
-            public Boolean isHorizontal()
-            {
-                return rowType == LineType.HORIZONTAL;
-            }
-        }
-
+       
         //It's responsibility would be create a weighted graph out of input file.
         class ProcessedInput
 		{
@@ -387,24 +187,6 @@ namespace DiscountOffers
                 this.customerNames = lines[0].Split(',');
                 this.productNames = lines[1].Split(',');
 			} 
-
-		}
-
-		class BipartiteGraph
-		{
-			List<AdvancedEdge> Edges;
-			BipartiteGraph(double[][] graph)
-			{
-				this.Edges = new List<AdvancedEdge>();
-
-			}
-
-		}
-
-		class AdvancedEdge
-		{
-			double edgeValue;
-			List<AdvancedEdge> victimEdges;
 
 		}
 	}
