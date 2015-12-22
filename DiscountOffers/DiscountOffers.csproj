@@ -43,6 +43,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HungarianAlgorithm.cs" />
+    <Compile Include="HungarianAlgorithmHelper.cs" />
+    <Compile Include="InputProcessor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -52,6 +54,7 @@
   <ItemGroup>
     <Content Include="input.txt" />
     <Content Include="ProblemStatement.txt" />
+    <Content Include="ReadMe.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

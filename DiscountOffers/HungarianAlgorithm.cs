@@ -13,6 +13,7 @@ C# hungarian algorithm implementation
     with this program; if not, write to the Free Software Foundation, Inc.,
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
     Ref. https://github.com/antifriz/hungarian-algorithm-n3/blob/master/src/HungarianAlgorithm.cs
+    Subrata : I have customized it based on my need.
 */
 
 using System.Collections.Generic;
