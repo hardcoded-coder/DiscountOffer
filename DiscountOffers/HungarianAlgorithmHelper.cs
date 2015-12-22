@@ -15,6 +15,11 @@ namespace DiscountOffers
         /// <returns>Maximized Assignment</returns>
         public static double CalculateMaxSSFromMatrix(double[,] weightedGraph)
         {
+            if(weightedGraph == null || weightedGraph.Length == 0)
+            {
+                throw new Exception("Invalid WeightedGraph");
+            }
+
             double result = 0;
             
             //Convert the weighted graph to minimization matrix before applying Hungarian Algorithm.
@@ -31,7 +36,7 @@ namespace DiscountOffers
         }
 
         /// <summary>
-        /// It converts a maximization matrix to a minimization matrix.
+        /// It converts a maximization matrix to a minimization matrix. Convert the matrix to NXN matrix with dummy row/column if required.
         /// </summary>
         /// <param name="weightedGraph"></param>
         /// <returns></returns>
@@ -40,14 +45,14 @@ namespace DiscountOffers
             //Get the maximun value from the matrix
             int i = 0, j = 0;
             double max = double.MinValue;
-            double min = 0;
+            double min = double.MaxValue;
             int maxRow = weightedGraph.GetLength(0), maxCol = weightedGraph.GetLength(1);
             int balancedRank = maxCol > maxRow ? maxCol : maxRow;
             double[,] minimizationMatrix = new double[balancedRank, balancedRank];
             
+            //Finding the max element of the matrix
             for (i = 0; i < maxRow; i++)
             {
-                //Expecting that the number of col is constant and same;
                 for (j = 0; j < maxCol; j++)
                 {
                     if (weightedGraph[i, j] > max)
@@ -57,17 +62,7 @@ namespace DiscountOffers
                 }
             }
 
-            //Balance the matrix with dummy row if it's not balanced and initilize it to 0
-            
-            for (i = 0; i < balancedRank; i++)
-            {
-                for (j = 0; j < balancedRank; j++)
-                {
-                    minimizationMatrix[i, j] = 0;
-                }
-            }
-
-            //subtract other element from max and convert it to a minimization matrix.
+            //Subtract other element from max and convert it to a minimization matrix.
             for (i = 0; i < maxRow; i++)
             {
                 for (j = 0; j < maxCol; j++)

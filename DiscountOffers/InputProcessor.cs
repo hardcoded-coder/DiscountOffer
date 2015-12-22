@@ -92,6 +92,5 @@ namespace DiscountOffers
             this.customerNames = lines[0].Split(',');
             this.productNames = lines[1].Split(',');
         }
-
     }
 }
